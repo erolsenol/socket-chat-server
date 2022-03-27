@@ -1,13 +1,20 @@
 const express = require("express");
 const http = require("http");
+var cors = require("cors");
 const { Server, Socket } = require("socket.io");
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.json({ msg: "This is CORS-enabled for all origins!" });
 });
 
 io.on("connection", (socket) => {
